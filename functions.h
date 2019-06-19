@@ -11,19 +11,20 @@ void menu();
 void wybierz();
 void licz(string przedmiot);
 void stworz();
-void wczytaj_zapis(vector<string> &przedmioty);
+void wczytaj_zapis(vector<string>&przedmioty);
 
 void menu()
 {
     for(;;) {
     int opcja;
-    cout<<"PROGRAM DO LICZENIA SREDNIEJ WAZONEJ"<<endl<<endl;
-    cout<<"------------MENU-------------"<<endl;
-    cout<<"Wpisz nr opcji :"<<endl;
-    cout<<"1.Stworz nowy plik"<<endl;
-    cout<<"2.Wczytaj istniejacy plik"<<endl;
-    cout<<"3.Usun istniejacy plik(Nie dziala)"<<endl;
-    cout<<"4.Wyjdz"<<endl<<endl;
+
+    cout<<"\n PROGRAM DO LICZENIA SREDNIEJ WAZONEJ"<<endl<<endl;
+    cout<<" ------------MENU-------------"<<endl;
+    cout<<" Wpisz nr opcji :"<<endl;
+    cout<<" 1.Stworz nowy plik"<<endl;
+    cout<<" 2.Wczytaj istniejacy plik"<<endl;
+    cout<<" 3.Usun istniejacy plik(Nie dziala)"<<endl;
+    cout<<" 4.Wyjdz"<<endl<<endl;
     cin>>opcja;
 
 
@@ -46,7 +47,8 @@ void licz(string przedmiot)
 
     fstream plik;
     plik.open(przedmiot, ios::in);
-    float waga=0, ocena=0,  licznik=5, mianownik=5, srednia=5, wartosc=0; //wartosci podane dla testu
+    float ocena=0, pamiecOceny=0, licznik=0, mianownik=0, srednia=0, wartosc=0;
+    int waga = 0, pamiecWagi = 0;
     plik>>licznik;
     plik>>mianownik;
     plik>>srednia;
@@ -58,37 +60,71 @@ void licz(string przedmiot)
 
     for(;;)
     {
-        cout<<"POLICZ SWOJA SREDNIA WARZONA "<<endl<<endl;
-        cout<<"Twoja aktualna srednia wazona to: "<<srednia<<endl<<endl;
-        cout<<"Aktualnie wpisane oceny:"<<endl;
+        cout<<"\n POLICZ SWOJA SREDNIA WARZONA "<<endl<<endl;
+        cout<<" Twoja aktualna srednia wazona to: "<<srednia<<endl<<endl;
+        cout<<" Aktualnie wpisane oceny:";
+
      /////////////////////////////////////////////////////
-       if(Waga1.size()>0) {  cout<<endl<<"O wadze 1: ";
-        for(auto elem: Waga1)
-            {
-                cout<<elem<<", ";
-            }   cout<<endl;                              }
+         cout<<endl<<"O wadze 1: ";
+         if(Waga1.empty()) {cout<<"Brak";}
+        else {
+            for(auto elem: Waga1)
+                {
+                    cout<<elem<<", ";
+                }
+             }
      /////////////////////////////////////////////////////
-       if(Waga2.size()>0) {  cout<<endl<<"O wadze 2: ";
-        for(auto elem: Waga2)
-            {
-                cout<<elem<<", ";
-            }   cout<<endl;                              }
+         cout<<endl<<"O wadze 2: ";
+         if(Waga2.empty()) {cout<<"Brak";}
+        else {
+            for(auto elem: Waga2)
+                {
+                    cout<<elem<<", ";
+                }
+             }
      /////////////////////////////////////////////////////
-       if(Waga3.size()>0) { cout<<endl<<"O wadze 3: ";
-        for(auto elem: Waga3)
-            {
-                cout<<elem<<", ";
-            }   cout<<endl;                              }
+        cout<<endl<<"O wadze 3: ";
+        if(Waga3.empty()) {cout<<"Brak";}
+        else {
+            for(auto elem: Waga3)
+                {
+                    cout<<elem<<", ";
+                }
+             }
      /////////////////////////////////////////////////////
-        cout<<"Aby przejsc do menu glownego wpisz litere"<<endl;
-        cout<<"Aby wyjsc z programu wpisz 0(do dowolnej wartosci)"<<endl;
-        cout<<"Podaj ocene a po spacji wage"<<endl;
+        cout<<"\n Aby przejsc do menu glownego wpisz dowolna litere"<<endl;
+        cout<<" Aby wyjsc z programu wpisz '0' (do dowolnej wartosci)"<<endl;
+        cout<<" Jesli chcesz usunac wpisana poprzednio ocene"<<endl<<
+              " wpisz do 'oceny' wartosc mniejsza od '0'"<<endl;
+        cout<<" Podaj ocene (od 1 do 6) a po spacji wage (1,2 lub 3)\n"<<endl;
+        pamiecWagi = waga;
+        pamiecOceny = ocena;
         cin>>ocena>>waga;
 
-        if(cin) {
+
+        if(cin)
+        {
            if(waga==0 || ocena==0) {exit(0) ;}
-           else if(ocena<1 || ocena>6) {cout<<"Podaj prawidlowe oceny!";}
-           else if(waga==1) {Waga1.push_back(ocena);cout<<endl<<"*  PRZELICZANIE  *";
+           else if(ocena<0)
+           {
+             if(pamiecOceny==0 || pamiecWagi==0)
+             {
+               cout<<endl<<" Aktualnie nie dodales jeszcze zadnej oceny!"<<endl;
+             }
+             else {
+             licznik = licznik - (pamiecWagi*pamiecWagi);
+             mianownik = mianownik - pamiecOceny;
+             srednia = licznik/mianownik;
+
+             if(pamiecWagi == 1)      { Waga1.push_back(pamiecOceny);}
+             else if(pamiecWagi == 2) { Waga2.push_back(pamiecOceny);}
+             else if(pamiecWagi == 3) { Waga3.push_back(pamiecOceny);}
+             }
+           }
+
+           else if(ocena<1 || ocena>6) {cout<<" Podaj prawidlowe oceny!";}
+           else if(waga==1) {
+                Waga1.push_back(ocena);cout<<endl<<"*  PRZELICZANIE  *";
 
                 wartosc=ocena*waga;
                 licznik+=wartosc;
@@ -101,7 +137,8 @@ void licz(string przedmiot)
                 plik.close();
                 }
 
-            else if(waga==2) {Waga2.push_back(ocena);cout<<endl<<"*  PRZELICZANIE  *";
+            else if(waga==2) {
+                Waga2.push_back(ocena);cout<<endl<<"*  PRZELICZANIE  *";
 
                 wartosc=ocena*waga;
                 licznik+=wartosc;
@@ -114,7 +151,8 @@ void licz(string przedmiot)
                 plik.close();
                 }
 
-            else if(waga==3) {Waga3.push_back(ocena);cout<<endl<<"*  PRZELICZANIE  *";
+            else if(waga==3) {
+                Waga3.push_back(ocena);cout<<endl<<"*  PRZELICZANIE  *";
 
                 wartosc=ocena*waga;
                 licznik+=wartosc;
@@ -126,10 +164,11 @@ void licz(string przedmiot)
                 plik<<srednia<<endl;
                 plik.close();
                 }
-            else {cout<<"Mozliwe wagi to tylko 1, 2 i 3!"<<endl;}  }
-    else {  cin.clear();cin.sync(); //czyszczenie strumienia wejscia
-    cout<<"Jedna z podanych wartosci nie jest liczba!"<<endl;
-    cout<<"Przekierowanie do menu glownego"; Sleep(1500);system("cls");menu(); }
+            else {cout<<" Mozliwe wagi to tylko 1, 2 i 3!"<<endl;}
+        }
+   else {  cin.clear();cin.sync(); //czyszczenie strumienia wejscia
+    cout<<" Jedna z podanych wartosci nie jest liczba!"<<endl;
+    cout<<" Przekierowanie do menu glownego"; Sleep(1500);system("cls");menu(); }
 
         Sleep(1000);
         system("cls");
@@ -138,7 +177,7 @@ void licz(string przedmiot)
 
 void stworz()
 {
-    vector<string>wyrazy = {};
+    vector<string>wyrazy ;
     wczytaj_zapis(wyrazy);
 
     int opcja;
@@ -147,8 +186,8 @@ void stworz()
     string wyrazPliku;
     bool czy_istnieje = true;
 
-    cout<<"----TWORZENIE NOWEGO PLIKU----"<<endl;
-    cout<<"Jak chcesz go nazwac?";
+    cout<<"\n ----TWORZENIE NOWEGO PLIKU----"<<endl;
+    cout<<" Jak chcesz go nazwac?"<<endl<<endl;
     cin>>wyraz;
 
     for(string elem : wyrazy)
@@ -158,21 +197,31 @@ void stworz()
 
     if(czy_istnieje == false)
     {
-        cout<<"Istnieje plik o takiej nazwie!";
+        cout<<"\n Istnieje plik o takiej nazwie!";
         Sleep(1500); system("cls"); stworz();
     } else {
         wyrazy.push_back(wyraz);
         plik.open("Dane_przedmioty.txt", ios::app);
-        if(plik.good()==false) {cout<<"Blad"<<endl;Sleep(1500); menu();}
+
         plik<<wyraz<<endl;
         plik.close();
+
+        fstream nowy;
+        wyraz+=".txt";
+        nowy.open(wyraz, ios::out);
+        for(int i=0; i<3; i++)
+        {
+            nowy<<0<<endl;
+        }
+        nowy.close();
+
         system("cls");
-        cout<<"Gratulacje, udalo Ci sie stworzyc nowy plik do liczenia sredniej wazonej!"<<endl;
-        cout<<"Jego nazwa to: "<<wyraz<<endl;
-        cout<<"Co chcesz zrobic dalej?(Wpisz odpowiedni numer opcji)"<<endl;
-        cout<<"1.Stworz kolejny plik"<<endl;
-        cout<<"2.Wroc do MENU glownego"<<endl;
-        cout<<"3.Wyjdz"<<endl;
+        cout<<"\n Gratulacje, udalo Ci sie stworzyc nowy plik do liczenia sredniej wazonej!"<<endl;
+        cout<<"\n Jego nazwa to: "<<wyraz<<endl;
+        cout<<"\n Co chcesz zrobic dalej?(Wpisz odpowiedni numer opcji)"<<endl;
+        cout<<"\n 1.Stworz kolejny plik"<<endl;
+        cout<<" 2.Wroc do MENU glownego"<<endl;
+        cout<<" 3.Wyjdz"<<endl;
         cin>>opcja;
         switch(opcja)
         {
@@ -192,11 +241,17 @@ void wybierz()
     vector<string> przedmioty;
     wczytaj_zapis(przedmioty);
 
+     if(przedmioty.empty())
+    {
+      cout<<endl<<"\n Jeszcze nie stworzyles zadnego pliku!";
+       Sleep(1500); system("cls"); menu();
+    }
+
     int wybor;
-    cout<<"Wybierz przedmiot:"<<endl;
+    cout<<"\n Wybierz przedmiot:\n"<<endl;
     for(int i=0; i<przedmioty.size();i++)
     {
-       cout<<i+1<<"."<<przedmioty[i]<<endl;
+       cout<<" "<<i+1<<"."<<przedmioty[i]<<endl;
     }
     cin>>wybor;
     Sleep(500);
@@ -209,11 +264,17 @@ void wczytaj_zapis(vector<string> &przedmioty)
     fstream plik;
     plik.open("Dane_przedmioty.txt", ios::in);
     if(plik.good()==false)
-        {cout<<"Blad pliku!"<<endl; Sleep(1500); system("cls");menu();}
+        {
+          plik.open( "Dane_przedmioty.txt", ios::app );
+          plik.close();
+          plik.open("Dane_przedmioty.txt", ios::in);
+        }
+
     string wyraz;
     while(getline(plik,wyraz))
         {
             przedmioty.push_back(wyraz);
         }
+
     plik.close();
 }
